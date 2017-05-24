@@ -121,19 +121,38 @@ define teamcity::agent (
 
 
   # service
-
-  $start_command        = "${use_agent_path}/bin/agent.sh run"
   $stop_command         = "${use_agent_path}/bin/agent.sh stop"
   $kill_command         = "${use_agent_path}/bin/agent.sh stop force"
   $service_description  = "Teamcity build agent '${agent_name}'"
 
-  file { "/etc/systemd/system/teamcity-agent-${agent_name}.service":
-    ensure  => 'present',
-    content => template('teamcity/systemd_teamcity.service.erb'),
-    mode    => '0755',
-  } ~>
+  if $::osfamily == 'RedHat' and $::operatingsystemmajrelease == '6' {
+    $start_command        = "${use_agent_path}/bin/agent.sh start"
 
-  Exec['systemctl-daemon-reload'] ->
+    ensure_resource('file', '/var/run/teamcity', {
+      ensure => directory,
+      owner  => 'teamcity',
+      group  => 'teamcity',
+    } )
+
+    file { "/etc/init.d/teamcity-agent-${agent_name}":
+      ensure  => 'present',
+      content => template('teamcity/teamcity.service.erb'),
+      mode    => '0755',
+      before  => Service["teamcity-agent-${agent_name}"],
+    }
+
+  } else {
+    $start_command        = "${use_agent_path}/bin/agent.sh run"
+
+    file { "/etc/systemd/system/teamcity-agent-${agent_name}.service":
+      ensure  => 'present',
+      content => template('teamcity/systemd_teamcity.service.erb'),
+      mode    => '0755',
+      before  => Service["teamcity-agent-${agent_name}"],
+    } ~>
+
+    Exec['systemctl-daemon-reload']
+  }
 
   service { "teamcity-agent-${agent_name}":
     ensure  => 'running',
