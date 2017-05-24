@@ -5,6 +5,7 @@ class teamcity::install inherits teamcity::params  {
   $teamcity_version               = $teamcity::params::teamcity_version
   $teamcity_base_url              = $teamcity::params::teamcity_base_url
   $teamcity_download_timeout      = $teamcity::params::teamcity_download_timeout
+  $teamcity_root_dir              = $teamcity::params::teamcity_root_dir
 
   $db_type                        = $teamcity::params::db_type
   $jdbc_download_url              = $teamcity::params::jdbc_download_url
@@ -33,7 +34,7 @@ class teamcity::install inherits teamcity::params  {
 
   file { '/opt/teamcity':
     ensure => 'link',
-    target => "/opt/teamcity-${teamcity_version}",
+    target => "/opt/teamcity-${teamcity_version}/${teamcity_root_dir}",
     before => Archive["teamcity-${teamcity_version}"],
   }
 
@@ -42,10 +43,10 @@ class teamcity::install inherits teamcity::params  {
       ensure           => 'present',
       url              => $use_download_url,
       target           => $use_target_dir,
+      root_dir         => $teamcity_root_dir,
       src_target       => '/opt/teamcity-sources',
       follow_redirects => true,
       checksum         => false,
-      strip_components  => 1,
       user             => 'teamcity',
       before           => File[$teamcity_data_path],
       timeout          => $teamcity_download_timeout,
@@ -58,7 +59,7 @@ class teamcity::install inherits teamcity::params  {
       extract         => true,
       source          => $use_download_url,
       extract_path    => $use_target_dir,
-      creates         => $use_target_dir,
+      creates         => "${use_target_dir}/${teamcity_root_dir}",
       checksum_verify => false,
       cleanup         => true,
       before          => File[$teamcity_data_path],

@@ -5,6 +5,9 @@
 #
 # == Parameters
 #
+# [*teamcity_root_dir*]
+# String, specifies the root dir of the archive
+#
 # [*authentication*]
 # String, must be 'local' (default) or 'ldap'. If 'ldap' is set you have to
 # provide the ldap_configuration parameter.
@@ -16,6 +19,7 @@
 class teamcity::params (
   $teamcity_version               = '9.1.3',
   $teamcity_base_url              = 'http://download.jetbrains.com/teamcity/TeamCity-%%%VERSION%%%.tar.gz',
+  $teamcity_root_dir              = 'TeamCity',
   $teamcity_download_timeout      = 180,
 
   $authentication                 = 'local',
