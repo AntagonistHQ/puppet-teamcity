@@ -56,6 +56,7 @@ define teamcity::agent (
       checksum          => false,
       user              => 'teamcity',
       extension         => 'zip',
+      root_dir          => 'bin/agent.sh',
     }
   } else {
     archive { "teamcity-agent-${agent_name}":
