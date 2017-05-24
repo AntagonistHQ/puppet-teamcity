@@ -17,38 +17,38 @@ class teamcity::install inherits teamcity::params  {
   $use_download_url = regsubst($teamcity_base_url, '%%%VERSION%%%', $teamcity_version)
   $use_target_dir   = "/opt/teamcity-${teamcity_version}"
 
-  include wget
-  include java
-  include systemd
-  include teamcity::prepare
+  include ::wget
+  include ::java
+  include ::systemd
+  include ::teamcity::prepare
 
   Class['java'] -> Group['teamcity']
 
 
   file { "/opt/teamcity-${teamcity_version}":
-    ensure  => 'directory',
-    owner   => 'teamcity',
-    group   => 'teamcity',
+    ensure => 'directory',
+    owner  => 'teamcity',
+    group  => 'teamcity',
   } ->
 
-  file { "/opt/teamcity":
-    ensure  => 'link',
-    target  => "/opt/teamcity-${teamcity_version}",
-    before  => Archive["teamcity-${teamcity_version}"],
+  file { '/opt/teamcity':
+    ensure => 'link',
+    target => "/opt/teamcity-${teamcity_version}",
+    before => Archive["teamcity-${teamcity_version}"],
   }
 
   if $::teamcity::params::archive_provider == 'camptocamp' {
     archive { "teamcity-${teamcity_version}":
-      ensure            => 'present',
-      url               => $use_download_url,
-      target            => $use_target_dir,
-      src_target        => '/opt/teamcity-sources',
-      follow_redirects  => true,
-      checksum          => false,
+      ensure           => 'present',
+      url              => $use_download_url,
+      target           => $use_target_dir,
+      src_target       => '/opt/teamcity-sources',
+      follow_redirects => true,
+      checksum         => false,
       strip_components  => 1,
-      user              => 'teamcity',
-      before            => File[$teamcity_data_path],
-      timeout           => $teamcity_download_timeout,
+      user             => 'teamcity',
+      before           => File[$teamcity_data_path],
+      timeout          => $teamcity_download_timeout,
     }
   } else {
     # must be puppet :)
@@ -61,18 +61,18 @@ class teamcity::install inherits teamcity::params  {
       creates         => $use_target_dir,
       checksum_verify => false,
       cleanup         => true,
-      before            => File[$teamcity_data_path],
+      before          => File[$teamcity_data_path],
     }
   }
 
   file { [
-    "${teamcity_data_path}",
+    $teamcity_data_path,
     "${teamcity_data_path}/config",
     "${teamcity_data_path}/lib",
     "${teamcity_data_path}/lib/jdbc"]:
-    ensure  => 'directory',
-    owner   => 'teamcity',
-    group   => 'teamcity',
+    ensure => 'directory',
+    owner  => 'teamcity',
+    group  => 'teamcity',
   }
 
 }
