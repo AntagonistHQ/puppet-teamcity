@@ -38,6 +38,12 @@ class teamcity::install inherits teamcity::params  {
     before => Archive["teamcity-${teamcity_version}"],
   }
 
+  -> file { $teamcity_logs_path:
+    ensure =>  'directory',
+    owner  => 'teamcity',
+    group  => 'teamcity',
+  }
+
   if $::teamcity::params::archive_provider == 'camptocamp' {
     archive { "teamcity-${teamcity_version}":
       ensure           => 'present',

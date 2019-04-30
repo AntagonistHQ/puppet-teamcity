@@ -9,7 +9,7 @@ TimeoutStartSec=0
 User=teamcity
 Environment="HOME=/var/lib/teamcity"
 Environment="TEAMCITY_HOME=/var/lib/teamcity"
-Environment="TEAMCITY_LOGS=/opt/teamcity/logs"
+Environment="TEAMCITY_LOGS_PATH=<%= @teamcity_logs_path %>"
 Environment="TEAMCITY_DATA_PATH=/var/lib/teamcity"
 
 ExecStartPre=-<%= @kill_command %>
