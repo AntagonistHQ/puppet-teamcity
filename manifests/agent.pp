@@ -148,8 +148,6 @@ define teamcity::agent (
       mode    => '0755',
     } ~>
 
-    Exec['systemctl-daemon-reload'] ->
-
     service { "teamcity-agent-${agent_name}":
       ensure  => 'running',
       enable  => true,
