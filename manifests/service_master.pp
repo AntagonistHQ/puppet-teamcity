@@ -14,8 +14,6 @@ class teamcity::service_master inherits teamcity::params  {
     mode    => '0755',
   } ~>
 
-  Exec['systemctl-daemon-reload'] ->
-
   service { 'teamcity':
     ensure  => 'running',
     enable  => true,
