@@ -1,7 +1,5 @@
 class teamcity::install inherits teamcity::params  {
 
-  include apt
-
   # taken from params
 
   $teamcity_version               = $teamcity::params::teamcity_version
@@ -19,8 +17,6 @@ class teamcity::install inherits teamcity::params  {
 
   $use_download_url = regsubst($teamcity_base_url, '%%%VERSION%%%', $teamcity_version)
   $use_target_dir   = "/opt/teamcity-${teamcity_version}"
-
-  apt::ppa { 'ppa:openjdk-r/ppa': }
 
   package { 'openjdk-11-jdk-headless':
     ensure => $teamcity::params::openjdk_11_jdk_headless,
