@@ -21,14 +21,14 @@ class teamcity::params (
   $teamcity_base_url              = 'http://download.jetbrains.com/teamcity/TeamCity-%%%VERSION%%%.tar.gz',
   $teamcity_root_dir              = 'TeamCity',
   $teamcity_download_timeout      = 180,
-  
+
   $openjdk_11_jdk_headless        = '11.0.14+9-0ubuntu2~16.04',
   $openjdk_11_jre_headless        = '11.0.14+9-0ubuntu2~16.04',
   $openjdk_11_jre                 = '11.0.14+9-0ubuntu2~16.04',
 
   $teamcity_server_mem_opts       = undef,
 
-  $authentication                 = 'local',
+  Enum['local', 'ldap'] $authentication = 'local',
   $ldap_configuration             = undef,
 
   $add_agent_sudo                 = false,
@@ -52,20 +52,12 @@ class teamcity::params (
   $teamcity_data_path             = '/var/lib/teamcity',
   $teamcity_logs_path             = '/opt/teamcity/logs',
 
-  $archive_provider               = 'camptocamp',
+  Optional[Enum['camptocamp', 'puppet']] $archive_provider = 'camptocamp',
 
 ) {
-
-  validate_re($authentication, '^(local|ldap)$',
-    "profiles::teamcity_master::authentication must be one of 'local' or 'ldap'"
-  )
 
   if $authentication == 'ldap' and $ldap_configuration == undef {
     fail('profiles::teamcity_master: if authentication is LDAP you have to provide $ldap_configuration')
   }
-
-  validate_re($archive_provider, '^(camptocamp|puppet)$',
-    "teamcity::params::archive_provider must be one of 'camptocamp'/'puppet'"
-  )
 
 }
