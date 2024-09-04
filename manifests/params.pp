@@ -22,7 +22,7 @@ class teamcity::params (
   $teamcity_root_dir              = 'TeamCity',
   $teamcity_download_timeout      = 180,
 
-  $openjdk_11_jdk_headless        = '11.0.14+9-0ubuntu2~16.04',
+  $openjdk_11_jdk_headless        = 'present',
   $openjdk_11_jre_headless        = '11.0.14+9-0ubuntu2~16.04',
   $openjdk_11_jre                 = '11.0.14+9-0ubuntu2~16.04',
 

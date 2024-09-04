@@ -18,16 +18,8 @@ class teamcity::install inherits teamcity::params  {
   $use_download_url = regsubst($teamcity_base_url, '%%%VERSION%%%', $teamcity_version)
   $use_target_dir   = "/opt/teamcity-${teamcity_version}"
 
-  package { 'openjdk-11-jdk-headless':
+  package { 'java-11-openjdk-headless':
     ensure => $teamcity::params::openjdk_11_jdk_headless,
-  }
-
-  package { 'openjdk-11-jre-headless':
-    ensure => $teamcity::params::openjdk_11_jre_headless,
-  }
-
-  package { 'openjdk-11-jre':
-    ensure => $teamcity::params::openjdk_11_jre,
   }
 
   include wget
